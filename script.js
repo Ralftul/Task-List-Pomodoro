@@ -1,23 +1,26 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Tasks
-    const taskInput = document.getElementById("taskInput");
-    const addTaskButton = document.getElementById("addTaskButton");
-    const taskList = document.getElementById("taskList");
+    const todoContainer = document.getElementsByClassName("todo-container")[0];
+    let originalTodoContainerSize = getComputedStyle(todoContainer).height
+
+    const taskInput = document.getElementById("task-input");
+    const addTaskButton = document.getElementById("add-task-button");
+    const taskList = document.getElementById("task-list");
 
     // Timer
-    const timerContainer = document.getElementById("timerContainer")
+    const timerContainer = document.getElementById("timer-container")
     let originalTimerContainerSize = getComputedStyle(timerContainer).height
 
-    const workTimerInput = document.getElementById("workTimerInput");
-    const breakTimerInput = document.getElementById("breakTimerInput");
+    const workTimerInput = document.getElementById("work-timer-input");
+    const breakTimerInput = document.getElementById("break-time-input");
 
-    const buttonsContainer = document.getElementById("buttonsContainer");
+    const buttonsContainer = document.getElementById("buttons-container");
     
-    const startPauseButton = document.getElementById("startPauseButton");
-    const resetButton = document.getElementById("resetButton");
+    const startPauseButton = document.getElementById("start-pause-button");
+    const resetButton = document.getElementById("reset-button");
     
-    const timerContent = document.getElementById("timerContent"); // Timer text
-    const timerCountdown = document.getElementById("timerCountdown") // Timer time display
+    const timerContent = document.getElementById("timer-content"); // Timer text
+    const timerCountdown = document.getElementById("timer-display") // Timer time display
     let originalTimerCountdownHeight = getComputedStyle(timerCountdown).height
 
     let workTimerTime = workTimerInput.value * 60 // Minutes to sec
@@ -49,8 +52,8 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.setItem("tasks", JSON.stringify(tasks));
     };
 
-    taskInput.addEventListener("keypress", function(e) {
-        if (e.key === "Enter") {
+    taskInput.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
             addTaskButton.click();
         }
     });
@@ -68,58 +71,79 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add task to the DOM
     function addTaskToDOM(taskText, isCompleted = false) {
         const li = document.createElement("li");
-        li.classList.add("taskItem")
+        li.classList.add()
 
         // Create task container
         const taskContainer = document.createElement("div");
         taskContainer.style.display = "flex";
-        taskContainer.style.width = "100%";
         taskContainer.style.alignItems = "center";
-        taskContainer.style.justifyContent = "space-between";
 
         // Create text span
         const textSpan = document.createElement("span");
         textSpan.classList.add("taskText");
+        textSpan.style.display = "flex";
+        textSpan.style.alignItems = "center";
         textSpan.textContent = taskText;
         textSpan.style.flex = "1"; // Give text more space
 
         // Create checkbox
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.classList.add("taskCheckbox");
-        checkbox.style.flex = "0";
-        checkbox.style.width = "16px";
-        checkbox.style.marginLeft = "10px";
+
+        checkbox.addEventListener("change", () => {
+            if (checkbox.checked) {
+                // Add a margin to the bottom of the task to ensure smooth transition
+                li.style.marginBottom = getComputedStyle(li).marginBottom;
+
+                // Trigger the collapse animation
+                textSpan.classList.add("completed");
+
+                textSpan.addEventListener("transitionend", function opacityHandler(event) {
+                    if (event.propertyName !== "opacity") return;
+                    textSpan.removeEventListener("transitionend", opacityHandler);
+
+                    const startingHeight = li.offsetHeight + "px";
+                    li.style.height = startingHeight;
+                    li.offsetHeight; // Trigger reflow
+
+                    li.style.opacity = "0";
+                    li.style.transform = "translateY(-20px)";
+                    li.style.height = "0";
+                    li.style.marginTop = "0";
+                    li.style.marginBottom = "0";
+                    li.style.paddingTop = "0";
+                    li.style.paddingBottom = "0";
+
+                    li.addEventListener("transitionend", function heightHandler(event) {
+                        if (event.propertyName !== "height") return;
+                        li.removeEventListener("transitionend", heightHandler);
+                        li.remove();
+                        removeTask(textSpan.textContent);
+                    });
+                });
+            }
+        });
         
+        // Create label
+        const label = document.createElement("label");
+        label.style.display = "flex";
+        label.style.justifyContent = "space-between";
+        label.style.flex = "1";
+        label.style.padding = "10px";
+
         if (isCompleted) {
             checkbox.checked = true;
             textSpan.classList.add("completed")
         }   
 
         // Append elements
-        taskContainer.appendChild(textSpan);
-        taskContainer.appendChild(checkbox);
-
+        label.appendChild(textSpan);
+        label.appendChild(checkbox);
+        
+        taskContainer.appendChild(label);
+        
         li.appendChild(taskContainer);
         taskList.appendChild(li);
-        
-        // When checkbox is clicked
-        checkbox.addEventListener("change", function() {
-            if (this.checked) {
-                textSpan.classList.add("completed");
-
-                // Delay before fading out
-                setTimeout(() => {
-                    li.classList.add("fade-out");
-
-                    // Remove after fade-out animation
-                    setTimeout(() => {
-                        li.remove();
-                        removeTask(taskText);
-                    }, 1200); // Matches the transition time (1.2s)
-                }, 500); // Delay before fade starts
-            }
-        });
     }
     
     // Get work timer input
@@ -136,10 +160,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!isTimerDisplayerToggled) { // If not toggled, toggle and start timer
             // Smooth show/hide
             replaceClass(timerContent, "visible", "hidden")
-            replaceClass(buttonsContainer, "shiftedDown", "shiftedUp")
+            replaceClass(buttonsContainer, "shifted-down", "shifted-up")
             replaceClass(timerCountdown, "hidden", "visible")
 
             // Update timerContainer height
+            todoContainer.style.height = "480px";
             timerContainer.style.height = "500px";
 
             // Adjusting startPauseButton visuals
@@ -174,10 +199,11 @@ document.addEventListener("DOMContentLoaded", function () {
         startPauseButton.style.backgroundColor = "rgb(13, 109, 13)";
 
         replaceClass(timerContent, "hidden", "visible")
-        replaceClass(buttonsContainer, "shiftedUp", "shiftedDown")
+        replaceClass(buttonsContainer, "shifted-up", "shifted-down")
         replaceClass(timerCountdown, "visible", "hidden")
 
         // Reset sizes
+        todoContainer.style.height = originalTodoContainerSize;
         timerContainer.style.height = originalTimerContainerSize
         timerCountdown.style.height = originalTimerCountdownHeight
     });

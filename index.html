@@ -4,45 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- To-do List -->
-    <div class="todoContainer">
+    <div class="todo-container">
         <h1>To-do List</h1><br>
 
         <!-- Task inputs -->
-        <div id="inputContainer">
-            <input type="text", id="taskInput", placeholder="Add a new task here">
-            <button id="addTaskButton">Add</button>
+        <div id="text-input-container">
+            <input type="text", id="task-input", placeholder="Add a new task here">
+            <button id="add-task-button">Add</button>
         </div>
         <!-- List -->
-        <div id="taskListContainer">
-            <ul id="taskList"></ul>
+        <div id="task-list-container">
+            <ul id="task-list"></ul>
         </div>
     </div>
 
     <!-- Pomodoro timer  -->
-    <div id="timerContainer">
+    <div id="timer-container">
         <h1>Pomodoro Timer</h1><br>
 
-        <div id="timerContent">
-            <div id="timerInputContainer">
+        <div id="timer-content">
+            <div id="timer-input-container">
                 <p>Work time:</p>
-                <p id="pauseTimerText">Pause time:</p>
+                <p id="pause-timer-text">Pause time:</p>
             </div>
             <!-- Timer inputs -->
-            <div id="timerInputContainer">
-                <input type="number", id="workTimerInput" value="25" min="1">
-                <input type="number", id="breakTimerInput" value="5" min="1">
+            <div id="timer-input-container">
+                <input type="number", id="work-timer-input", class="timer-input", value="25" min="1">
+                <input type="number", id="break-time-input", class="timer-input", value="5" min="1">
             </div>
         </div>
         <!-- Timer time display -->
-        <p id="timerCountdown"></p>
+        <p id="timer-display"></p>
             <!-- Buttons -->
-            <div id="buttonsContainer", class="shiftedDown">
-                <button class="timerButton", id="startPauseButton">Start</button>
-                <button class="timerButton", id="resetButton">Reset</button>
+            <div id="buttons-container", class="shifted-down">
+                <button class="timer-button", id="start-pause-button">Start</button>
+                <button class="timer-button", id="reset-button">Reset</button>
             </div>
     </div>
     <script src="script.js"></script>
