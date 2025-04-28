@@ -159,9 +159,9 @@ document.addEventListener("DOMContentLoaded", function () {
     startPauseButton.addEventListener("click", function () {
         if (!isTimerDisplayerToggled) { // If not toggled, toggle and start timer
             // Smooth show/hide
-            replaceClass(timerContent, "visible", "hidden")
-            replaceClass(buttonsContainer, "shifted-down", "shifted-up")
-            replaceClass(timerCountdown, "hidden", "visible")
+            replaceClass(timerContent, "visible", "hidden");
+            replaceClass(buttonsContainer, "shifted-down", "shifted-up");
+            replaceClass(timerCountdown, "hidden", "visible");
 
             // Update timerContainer height
             todoContainer.style.height = "480px";

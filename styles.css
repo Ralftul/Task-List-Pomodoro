@@ -33,7 +33,7 @@ body {
 }
 
 #task-input {
-    height: 2.5rem;
+    height: 40px;
 }
 
 /* Buttons */
@@ -44,7 +44,7 @@ body {
     border-radius: 10px;
     cursor: pointer;
     width: 60px;
-    height: 2.5rem;
+    height: 40px;
 }
 
 #add-task-button:hover {
@@ -138,7 +138,7 @@ li {
 
 .timer-input {
     width: auto;
-    height: 2.5rem;
+    height: 40px;
 }
 
 /* Buttons */
@@ -213,7 +213,6 @@ input {
 }
 
 input[type="number"] {
-    appearance: textfield; /* remove arrows in general */
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
